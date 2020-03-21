@@ -1,0 +1,25 @@
+﻿@using ToDo.Frontend.Views.Components
+
+@inherits BaseView<ViewModels.ItemsViewModel>
+
+@if (Model.CurrentList != null)
+{
+    <EditForm Model="@Model" OnValidSubmit="Model.CreateNewItemAsync" class="form-inline mb-sm-2">
+        <DataAnnotationsValidator/>
+        <div class="input-group w-100">
+            <InputText type="input" class="form-control form-control-sm" id="new-item-input" placeholder="New Item" @bind-Value="Model.NewItemText"/>
+            <button type="submit" class="btn btn-sm btn-primary"><span class="fas fa-plus"></span></button>
+        </div>
+    </EditForm>
+
+    <ul class="list-group">
+        @foreach (var item in Model.Items)
+        {
+            <TextItemComponent Text="@item.Text"
+                               IsSelected="@(Model.SelectedItem?.Id == item.Id)"
+                               Click="@(() => Model.SelectItem(item))"
+                               Edit="@(newText => Model.EditItemAsync(item, newText))"
+                               Remove="@(() => Model.RemoveItemAsync(item))"/>
+        }
+    </ul>
+}

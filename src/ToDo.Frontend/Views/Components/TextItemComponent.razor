@@ -1,0 +1,60 @@
+﻿<li class="list-group-item d-flex@(IsSelected ? " active" : string.Empty)">
+@if (_editing)
+{
+    <EditForm Model="@this" OnValidSubmit="CommitEdit" class="w-100">
+        <DataAnnotationsValidator/>
+        <div class="input-group w-100">
+            <input class="form-control-sm flex-grow-1 mr-sm-1" @bind="_editedText"/>
+            <button type="submit" class="btn btn-outline-success btn-sm mr-sm-1" @onclick="@CommitEdit"><span class="fas fa-check"></span></button>
+            <button class="btn btn-outline-danger btn-sm" @onclick="@DiscardEdit"><span class="fas fa-ban"></span></button>
+        </div>
+    </EditForm>
+}
+else
+{
+    <span class="flex-grow-1" style="cursor: pointer;" @onclick="@Click">@Text</span>
+    <button class="btn btn-outline-warning btn-sm mr-sm-1" @onclick="@StartEdit"><span class="fas fa-edit"></span></button>
+    <button class="btn btn-outline-danger btn-sm" @onclick="@Remove"><span class="fas fa-times"></span></button>
+}
+</li>
+
+@code
+{
+    private bool _editing;
+    private string _editedText;
+    
+    [Parameter]
+    public string Text { get; set; }
+    
+    [Parameter]
+    public bool IsSelected { get; set; }
+    
+    [Parameter]
+    public EventCallback Click { get; set; }
+    
+    [Parameter]
+    public EventCallback<string> Edit { get; set; }
+    
+    [Parameter]
+    public EventCallback Remove { get; set; }
+
+    private void StartEdit()
+    {
+        _editing = true;
+        _editedText = Text;
+    }
+
+    private void CommitEdit()
+    {
+        Edit.InvokeAsync(_editedText);
+        
+        _editing = false;
+        _editedText = null;
+    }
+
+    private void DiscardEdit()
+    {
+        _editing = false;
+        _editedText = null;
+    }
+}

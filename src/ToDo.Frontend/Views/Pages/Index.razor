@@ -1,0 +1,26 @@
+﻿@page "/"
+
+@inherits BaseView<ViewModels.IndexViewModel>
+
+@attribute [AllowAnonymous]
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">to-do</a>
+    <ul class="navbar-nav ml-auto">
+        <AuthorizeView>
+            <Authorized>
+                <li class="nav-item"><NavLink class="nav-link" href="/app">Go to my To-Do</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="#" @onclick="@Model.LogoutAsync">Logout</NavLink></li>
+            </Authorized>
+            <NotAuthorized>
+                <li class="nav-item"><NavLink class="nav-link" href="/login">Login</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/register">Register</NavLink></li>
+            </NotAuthorized>
+        </AuthorizeView>
+    </ul>
+</nav>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+    <h1 class="display-4 font-weight-normal">to-do application</h1>
+    <p class="lead font-weight-normal">Start your to-do listing here.</p>
+</div>
