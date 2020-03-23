@@ -21,6 +21,12 @@ ProjectSection(SolutionItems) = preProject
 	docker-compose.yaml = docker-compose.yaml
 EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BA76B118-96DC-4A9C-A30C-724E378A0338}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.Tests.Integration", "tests\ToDo.Backend.Tests.Integration\ToDo.Backend.Tests.Integration.csproj", "{CCD0FF2F-82E0-46AF-93E1-FCC44A41995B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.Tests.E2E", "tests\ToDo.Backend.Tests.E2E\ToDo.Backend.Tests.E2E.csproj", "{C6B45FD1-D411-48DF-9E22-631C2CA1150E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +39,8 @@ Global
 		{D8919E1C-BFFE-49CF-975A-E695C10CE55C} = {830733BA-CB28-48A1-BB68-EF441764FCD3}
 		{2009D762-D7AE-4566-859E-6EAB4E7EF47B} = {830733BA-CB28-48A1-BB68-EF441764FCD3}
 		{6FF44DF8-57A0-452D-9F1B-DC7E4A650976} = {830733BA-CB28-48A1-BB68-EF441764FCD3}
+		{CCD0FF2F-82E0-46AF-93E1-FCC44A41995B} = {BA76B118-96DC-4A9C-A30C-724E378A0338}
+		{C6B45FD1-D411-48DF-9E22-631C2CA1150E} = {BA76B118-96DC-4A9C-A30C-724E378A0338}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A65D9C3F-AB42-413F-9723-298F749FA9EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -59,5 +67,13 @@ Global
 		{6FF44DF8-57A0-452D-9F1B-DC7E4A650976}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FF44DF8-57A0-452D-9F1B-DC7E4A650976}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FF44DF8-57A0-452D-9F1B-DC7E4A650976}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCD0FF2F-82E0-46AF-93E1-FCC44A41995B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCD0FF2F-82E0-46AF-93E1-FCC44A41995B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCD0FF2F-82E0-46AF-93E1-FCC44A41995B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCD0FF2F-82E0-46AF-93E1-FCC44A41995B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6B45FD1-D411-48DF-9E22-631C2CA1150E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6B45FD1-D411-48DF-9E22-631C2CA1150E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6B45FD1-D411-48DF-9E22-631C2CA1150E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6B45FD1-D411-48DF-9E22-631C2CA1150E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

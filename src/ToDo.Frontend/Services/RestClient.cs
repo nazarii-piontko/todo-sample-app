@@ -293,9 +293,7 @@ namespace ToDo.Frontend.Services
 
             if (!string.IsNullOrEmpty(token))
             {
-                var bearer = "Bearer " + token;
-
-                reqMessage.Headers.TryAddWithoutValidation("Authorization", bearer);
+                reqMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
         }
     }

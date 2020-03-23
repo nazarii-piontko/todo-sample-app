@@ -22,7 +22,7 @@ using ToDo.Backend.Swagger;
 
 namespace ToDo.Backend
 {
-    internal sealed class Startup
+    public sealed class Startup
     {
         private IWebHostEnvironment Environment { get; }
         
