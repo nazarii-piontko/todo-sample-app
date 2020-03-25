@@ -1,0 +1,13 @@
+image:
+  tag: latest
+  pullPolicy: Never
+
+service:
+  type: NodePort
+  nodePort: 30080
+
+env:
+- name: ASPNETCORE_ENVIRONMENT
+  value: Development
+- name: ConnectionStrings__DefaultConnection
+  value: "Host=todo-db-postgresql;Username=root;Password=root;Database=todo"

@@ -1,0 +1,6 @@
+env:
+  email: root@company.com
+  password: root
+
+service:
+  type: NodePort

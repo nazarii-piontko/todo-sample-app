@@ -1,0 +1,7 @@
+postgresqlUsername: root
+postgresqlPassword: root
+postgresqlDatabase: todo
+
+service:
+  type: NodePort
+  nodePort: 30432

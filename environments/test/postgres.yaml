@@ -1,0 +1,3 @@
+postgresqlUsername: root
+postgresqlPassword: root
+postgresqlDatabase: todo
