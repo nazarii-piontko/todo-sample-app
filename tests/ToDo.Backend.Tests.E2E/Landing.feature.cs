@@ -19,7 +19,7 @@ namespace ToDo.Backend.Tests.E2E
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.1.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class AccountsFeature : object, Xunit.IClassFixture<AccountsFeature.FixtureData>, System.IDisposable
+    public partial class LandingPageFeature : object, Xunit.IClassFixture<LandingPageFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace ToDo.Backend.Tests.E2E
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "Accounts.feature"
+#line 1 "Landing.feature"
 #line hidden
         
-        public AccountsFeature(AccountsFeature.FixtureData fixtureData, ToDo_Backend_Tests_E2E_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public LandingPageFeature(LandingPageFeature.FixtureData fixtureData, ToDo_Backend_Tests_E2E_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace ToDo.Backend.Tests.E2E
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Accounts", null, ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Landing page", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -75,28 +75,19 @@ namespace ToDo.Backend.Tests.E2E
             testRunner.CollectScenarioErrors();
         }
         
-        public virtual void FeatureBackground()
-        {
-#line 2
-  #line hidden
-#line 3
-    testRunner.Given("service is started and running", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-        }
-        
         void System.IDisposable.Dispose()
         {
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Register")]
-        [Xunit.TraitAttribute("FeatureTitle", "Accounts")]
-        [Xunit.TraitAttribute("Description", "Register")]
-        public virtual void Register()
+        [Xunit.SkippableFactAttribute(DisplayName="Open landing page")]
+        [Xunit.TraitAttribute("FeatureTitle", "Landing page")]
+        [Xunit.TraitAttribute("Description", "Open landing page")]
+        public virtual void OpenLandingPage()
         {
             string[] tagsOfScenario = ((string[])(null));
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Register", null, ((string[])(null)));
-#line 5
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Open landing page", null, ((string[])(null)));
+#line 3
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -116,11 +107,11 @@ namespace ToDo.Backend.Tests.E2E
             else
             {
                 this.ScenarioStart();
-#line 2
-  this.FeatureBackground();
+#line 4
+    testRunner.When("I open page at /", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 6
-    testRunner.When("I send POST api/v1.0/account/register:", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 5
+    testRunner.Then("I should see correct landing page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -133,12 +124,12 @@ namespace ToDo.Backend.Tests.E2E
             
             public FixtureData()
             {
-                AccountsFeature.FeatureSetup();
+                LandingPageFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                AccountsFeature.FeatureTearDown();
+                LandingPageFeature.FeatureTearDown();
             }
         }
     }
