@@ -9,8 +9,11 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+env: []
+
 serviceAccount:
   create: true
+  annotations: {}
   name: todo-app
 
 podSecurityContext: {}
@@ -24,12 +27,9 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-env: []
-
 service:
   type: ClusterIP
   port: 80
-  nodePort:
 
 ingress:
   enabled: false
@@ -39,11 +39,10 @@ ingress:
   hosts:
     - host: todo-app.local
       paths: []
-
   tls: []
-  #  - secretName: chart-example-tls
+  #  - secretName: todo-app-tls
   #    hosts:
-  #      - chart-example.local
+  #      - todo-app.local
 
 resources: {}
   # limits:

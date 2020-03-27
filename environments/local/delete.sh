@@ -1,12 +1,14 @@
 #!/bin/bash
 
-helm delete --purge todo-db
-helm delete --purge todo-db-ui
-
-helm delete --purge todo-bdd-driver
-
 if [[ $1 == --app ]]; then
-    helm delete --purge todo
+    helm delete todo
 fi
+
+helm delete todo-bdd-driver
+
+helm delete todo-db-ui
+
+helm delete todo-db
+# kubectl delete data-todo-db-postgresql-0
 
 pkill -f "kubectl port-forward service/todo-"

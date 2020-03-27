@@ -3,16 +3,13 @@ kind: Service
 metadata:
   name: {{ include "app.fullname" . }}
   labels:
-{{ include "app.labels" . | indent 4 }}
+    {{- include "app.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
-      {{- if .Values.service.nodePort }}
-      nodePort: {{ .Values.service.nodePort }}
-      {{- end }}
+      protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "app.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "app.selectorLabels" . | nindent 4 }}

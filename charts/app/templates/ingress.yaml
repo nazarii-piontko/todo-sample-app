@@ -10,7 +10,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-{{ include "app.labels" . | indent 4 }}
+    {{- include "app.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
