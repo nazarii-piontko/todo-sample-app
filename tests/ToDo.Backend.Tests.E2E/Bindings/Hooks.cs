@@ -1,36 +1,59 @@
-using System;
-using System.Drawing;
+using System.Net.Http;
+using System.Threading.Tasks;
 using BoDi;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Remote;
+using Microsoft.Extensions.Configuration;
 using TechTalk.SpecFlow;
+using ToDo.Backend.Tests.E2E.Infrastructure;
+using ToDo.Backend.Tests.E2E.Infrastructure.Settings;
+using ToDo.Backend.Tests.E2E.Pages;
 
 namespace ToDo.Backend.Tests.E2E.Bindings
 {
     [Binding]
     public sealed class Hooks
     {
-        private readonly IObjectContainer _objectContainer;
-
-        public Hooks(IObjectContainer objectContainer)
+        [BeforeTestRun]
+        public static void BeforeAll(IObjectContainer container)
         {
-            _objectContainer = objectContainer;
+            container.RegisterInstanceAs(new HttpClient());
+            
+            var settings = new ConfigurationBuilder()
+                .AddJsonFile("settings.json")
+                .AddEnvironmentVariables()
+                .Build()
+                .Get<TestsEnvSettings>();
+
+            container.RegisterInstanceAs(settings);
+            
+            container.RegisterTypeAs<Artifacts, Artifacts>();
+            container.RegisterTypeAs<AutController, AutController>();
+            container.RegisterTypeAs<WebDriverProvider, WebDriverProvider>();
+            
+            container.Resolve<Artifacts>().Init();
         }
 
         [BeforeScenario]
-        public void BeforeScenario()
+        public static void BeforeScenario(IObjectContainer container)
         {
-            var webDriver = new RemoteWebDriver(new ChromeOptions());
-            webDriver.Manage().Window.Size = new Size(800, 600);
-            webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5d);
-            _objectContainer.RegisterInstanceAs<IWebDriver>(webDriver);
+            container.RegisterFactoryAs(c =>
+            {
+                var webDriverFactory = c.Resolve<WebDriverProvider>();
+                var driver = webDriverFactory.CreateAsync().Result;
+                return driver;
+            });
+            
+            container.RegisterTypeAs<AnyPage, AnyPage>();
+            container.RegisterTypeAs<LandingPage, LandingPage>();
         }
-
-        [AfterScenario]
-        public void AfterScenario()
+        
+        [AfterTestRun]
+        public static async Task AfterAll(IObjectContainer container)
         {
-            _objectContainer.Resolve<IWebDriver>().Dispose();
+            if (container.IsRegistered<AutController>())
+                await container.Resolve<AutController>().StopAsync();
+            
+            if (container.IsRegistered<WebDriverProvider>())
+                await container.Resolve<WebDriverProvider>().CleanUpAsync();
         }
     }
 }

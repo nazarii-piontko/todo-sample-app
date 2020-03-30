@@ -1,10 +1,17 @@
 #!/bin/bash
 
-helm delete todo
+if [[ $1 == --app ]]; then
+    # Application
+    helm delete todo || true
+    pkill -f "kubectl port-forward service/todo-app" || true
 
-helm delete todo-bdd-driver
+    # PostgreSQL
+    helm delete todo-db || true
+    kubectl delete pvc/data-todo-db-postgresql-0 || true
+fi
 
-helm delete todo-db
-kubectl delete data-todo-db-postgresql-0
-
-pkill -f "kubectl port-forward service/todo-"
+if [[ $1 == --selenium ]]; then
+    # Selenium
+    helm delete todo-bdd-driver || true
+    pkill -f "kubectl port-forward service/todo-bdd-driver-selenium-hub" || true
+fi

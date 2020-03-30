@@ -1,3 +1,7 @@
+image:
+  tag: latest
+  pullPolicy: Never
+
 env:
 - name: ASPNETCORE_ENVIRONMENT
   value: Development

@@ -75,6 +75,18 @@ namespace ToDo.Backend.Tests.E2E
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 2
+  #line hidden
+#line 3
+    testRunner.Given("service is running", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 4
+    testRunner.And("web browser window with size 800x600", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
         void System.IDisposable.Dispose()
         {
             this.TestTearDown();
@@ -87,7 +99,7 @@ namespace ToDo.Backend.Tests.E2E
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Open landing page", null, ((string[])(null)));
-#line 3
+#line 6
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -107,11 +119,14 @@ namespace ToDo.Backend.Tests.E2E
             else
             {
                 this.ScenarioStart();
-#line 4
+#line 2
+  this.FeatureBackground();
+#line hidden
+#line 7
     testRunner.When("I open page at /", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 5
-    testRunner.Then("I should see correct landing page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 8
+    testRunner.Then("I should see correct landing page within 5 sec", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

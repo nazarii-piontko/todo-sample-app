@@ -1,0 +1,24 @@
+{
+    "Aut": {
+        "BaseUri": "http://todo-app/",
+        "ProbeUri": "http://localhost:5000/"
+    },
+    
+    "AutDeploy": {
+        "StartCommand": ["../../../../../environments/test/apply.sh", "--app"],
+        "StopCommand": ["../../../../../environments/test/delete.sh", "--app"]
+    },
+    
+    "Selenium": {
+        "StartCommand": ["../../../../../environments/test/apply.sh", "--selenium"],
+        "StopCommand": ["../../../../../environments/test/delete.sh", "--selenium"],
+        "Uri": "http://localhost:4444/wd/hub/",
+        "ImplicitWait": "00:00:01"
+    },
+    
+    "Tests": {
+        "ArtifactsDirectory": "./artifacts",
+        "OperationsTimeout": "00:03:00",
+        "RequestsTimeout": "00:00:10"
+    }
+}

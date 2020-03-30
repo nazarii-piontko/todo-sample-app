@@ -1,35 +1,29 @@
+using System;
+using System.Threading.Tasks;
 using FluentAssertions;
-using OpenQA.Selenium;
 using TechTalk.SpecFlow;
+using ToDo.Backend.Tests.E2E.Infrastructure;
+using ToDo.Backend.Tests.E2E.Pages;
 
 namespace ToDo.Backend.Tests.E2E.Bindings.Steps
 {
     [Binding]
     public sealed class LandingSteps
     {
-        private readonly IWebDriver _webDriver;
+        private readonly LandingPage _landingPage;
 
-        public LandingSteps(IWebDriver webDriver)
+        public LandingSteps(LandingPage landingPage)
         {
-            _webDriver = webDriver;
+            _landingPage = landingPage;
         }
 
-        [Then(@"(?:I should )?see correct landing page")]
-        public void SeeCorrectLandingPage()
+        [Then(@"(?:I should )?see correct landing page within (?<seconds>\d+) sec")]
+        public async Task SeeCorrectLandingPage(int seconds)
         {
-            FindElement(By.ClassName("navbar")).Should().NotBeNull();
-        }
-
-        private IWebElement FindElement(By by)
-        {
-            try
-            {
-                return _webDriver.FindElement(by);
-            }
-            catch (NoSuchElementException)
-            {
-                return null;
-            }
+            Func<Task> act = () =>
+                Utils.ExecuteWithRetryAsync(() => _landingPage.IsCorrectLayout(),
+                    TimeSpan.FromSeconds(seconds));
+            await act.Should().NotThrowAsync();
         }
     }
 }
