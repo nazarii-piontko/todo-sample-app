@@ -17,7 +17,7 @@ namespace ToDo.Frontend
 
             RegisterServices(builder.Services);
 
-            builder.RootComponents.Add<Views.App>("app");
+            builder.RootComponents.Add<Views.App>("#app");
 
             await builder.Build().RunAsync();
         }
