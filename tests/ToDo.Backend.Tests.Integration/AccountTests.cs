@@ -23,9 +23,11 @@ namespace ToDo.Backend.Tests.Integration
         {
             // Arrange
             var client = _factory.CreateClient();
+            var email = AccountOperations.GenerateUserEmail();
+            var password = "1234_Qwerty";
 
             // Act
-            var response = await client.RegisterUserAsync("user-valid@company.com", "1234_Qwerty");
+            var response = await client.RegisterUserAsync(email, password);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -36,9 +38,11 @@ namespace ToDo.Backend.Tests.Integration
         {
             // Arrange
             var client = _factory.CreateClient();
-
+            var email = AccountOperations.GenerateUserEmail();
+            var password = "12_Qw";
+            
             // Act
-            var response = await client.RegisterUserAsync("user-invalid@company.com", "12_Qw");
+            var response = await client.RegisterUserAsync(email, password);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -54,12 +58,13 @@ namespace ToDo.Backend.Tests.Integration
         {
             // Arrange
             var client = _factory.CreateClient();
-
-            await client.RegisterUserAsync("user-valid@company.com", "1234_Qwerty");
+            var email = AccountOperations.GenerateUserEmail();
+            var password = "1234_Qwerty";
+            
+            await client.RegisterUserAsync(email, password);
             
             // Act
-
-            var response = await client.LoginUserAsync("user-valid@company.com", "1234_Qwerty");
+            var response = await client.LoginUserAsync(email, password);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

@@ -1,3 +1,4 @@
+using System.Linq;
 using BoDi;
 using OpenQA.Selenium;
 
@@ -12,7 +13,9 @@ namespace ToDo.Backend.Tests.E2E.Pages
         
         public bool IsCorrectLayout()
         {
-            return FindElement(By.ClassName("navbar")) != null;
+            return new[] {"login-link", "register-link"}
+                .Select(id => FindElement(By.Id(id)) != null)
+                .All(_ => _);
         }
     }
 }

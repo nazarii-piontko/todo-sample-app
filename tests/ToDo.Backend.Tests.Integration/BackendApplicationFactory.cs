@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +20,11 @@ namespace ToDo.Backend.Tests.Integration
                     options.UseInMemoryDatabase("db");
                 });
                 
-                CreateDatabase(services);
+                InitializeDatabase(services);
             });
         }
 
-        private static void CreateDatabase(IServiceCollection services)
+        private static void InitializeDatabase(IServiceCollection services)
         {
             var provider = services.BuildServiceProvider();
             

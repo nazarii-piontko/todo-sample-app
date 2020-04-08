@@ -88,8 +88,10 @@ namespace ToDo.Backend.Tests.Integration
         private async Task<HttpClient> CreateClient()
         {
             var client = _factory.CreateClient();
+            var email = AccountOperations.GenerateUserEmail();
+            var password = "1234_Qwerty";
             
-            var token = await client.GetUserTokenAsync();
+            var token = await client.GetUserTokenAsync(email, password);
             
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             

@@ -1,8 +1,8 @@
 replicaCount: 1
 
 image:
-  repository: todo-app
-  tag: master
+  repository: registry.gitlab.com/nazarii-piontko/todo-sample-app
+  tag: latest
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -33,8 +33,8 @@ service:
 
 ingress:
   enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: todo-app.local
@@ -57,3 +57,5 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+podAnnotations: {}

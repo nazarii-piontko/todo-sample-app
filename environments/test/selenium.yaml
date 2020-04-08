@@ -5,4 +5,4 @@ chrome:
   enabled: true
 
 firefox:
-  enabled: true
+  enabled: false

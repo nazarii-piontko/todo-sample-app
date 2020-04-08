@@ -2,17 +2,17 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{830733BA-CB28-48A1-BB68-EF441764FCD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend", "src\ToDo.Backend\ToDo.Backend.csproj", "{A65D9C3F-AB42-413F-9723-298F749FA9EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend", "sources\ToDo.Backend\ToDo.Backend.csproj", "{A65D9C3F-AB42-413F-9723-298F749FA9EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Frontend", "src\ToDo.Frontend\ToDo.Frontend.csproj", "{7F42075F-7A49-4E1F-AD3F-DC22197466FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Frontend", "sources\ToDo.Frontend\ToDo.Frontend.csproj", "{7F42075F-7A49-4E1F-AD3F-DC22197466FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.Domain", "src\ToDo.Backend.Domain\ToDo.Backend.Domain.csproj", "{6A3D333C-F383-4BDC-B955-6A7AC61BC044}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.Domain", "sources\ToDo.Backend.Domain\ToDo.Backend.Domain.csproj", "{6A3D333C-F383-4BDC-B955-6A7AC61BC044}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.Persistence", "src\ToDo.Backend.Persistence\ToDo.Backend.Persistence.csproj", "{D8919E1C-BFFE-49CF-975A-E695C10CE55C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.Persistence", "sources\ToDo.Backend.Persistence\ToDo.Backend.Persistence.csproj", "{D8919E1C-BFFE-49CF-975A-E695C10CE55C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.DTO", "src\ToDo.Backend.DTO\ToDo.Backend.DTO.csproj", "{2009D762-D7AE-4566-859E-6EAB4E7EF47B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.DTO", "sources\ToDo.Backend.DTO\ToDo.Backend.DTO.csproj", "{2009D762-D7AE-4566-859E-6EAB4E7EF47B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.DTO.Validators", "src\ToDo.Backend.DTO.Validators\ToDo.Backend.DTO.Validators.csproj", "{6FF44DF8-57A0-452D-9F1B-DC7E4A650976}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Backend.DTO.Validators", "sources\ToDo.Backend.DTO.Validators\ToDo.Backend.DTO.Validators.csproj", "{6FF44DF8-57A0-452D-9F1B-DC7E4A650976}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BA76B118-96DC-4A9C-A30C-724E378A0338}"
 EndProject

@@ -77,12 +77,12 @@ namespace ToDo.Backend.Tests.E2E
         
         public virtual void FeatureBackground()
         {
-#line 2
-  #line hidden
 #line 3
+  #line hidden
+#line 4
     testRunner.Given("service is running", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 4
+#line 5
     testRunner.And("web browser window with size 800x600", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
@@ -92,14 +92,14 @@ namespace ToDo.Backend.Tests.E2E
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Open landing page")]
+        [Xunit.SkippableFactAttribute(DisplayName="As a user I should see correct Landing page")]
         [Xunit.TraitAttribute("FeatureTitle", "Landing page")]
-        [Xunit.TraitAttribute("Description", "Open landing page")]
-        public virtual void OpenLandingPage()
+        [Xunit.TraitAttribute("Description", "As a user I should see correct Landing page")]
+        public virtual void AsAUserIShouldSeeCorrectLandingPage()
         {
             string[] tagsOfScenario = ((string[])(null));
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Open landing page", null, ((string[])(null)));
-#line 6
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("As a user I should see correct Landing page", null, ((string[])(null)));
+#line 7
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -119,14 +119,14 @@ namespace ToDo.Backend.Tests.E2E
             else
             {
                 this.ScenarioStart();
-#line 2
+#line 3
   this.FeatureBackground();
 #line hidden
-#line 7
+#line 8
     testRunner.When("I open page at /", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 8
-    testRunner.Then("I should see correct landing page within 5 sec", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 9
+    testRunner.Then("I should see correct landing page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

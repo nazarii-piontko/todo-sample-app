@@ -1,8 +1,5 @@
-using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using TechTalk.SpecFlow;
-using ToDo.Backend.Tests.E2E.Infrastructure;
 using ToDo.Backend.Tests.E2E.Pages;
 
 namespace ToDo.Backend.Tests.E2E.Bindings.Steps
@@ -17,13 +14,10 @@ namespace ToDo.Backend.Tests.E2E.Bindings.Steps
             _landingPage = landingPage;
         }
 
-        [Then(@"(?:I should )?see correct landing page within (?<seconds>\d+) sec")]
-        public async Task SeeCorrectLandingPage(int seconds)
+        [Then(@"(?:I should )?see correct landing page")]
+        public void SeeCorrectLandingPage()
         {
-            Func<Task> act = () =>
-                Utils.ExecuteWithRetryAsync(() => _landingPage.IsCorrectLayout(),
-                    TimeSpan.FromSeconds(seconds));
-            await act.Should().NotThrowAsync();
+            _landingPage.IsCorrectLayout().Should().BeTrue();
         }
     }
 }
