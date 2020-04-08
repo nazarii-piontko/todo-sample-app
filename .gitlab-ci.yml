@@ -1,18 +1,104 @@
 variables:
-  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" 
+  DOCKER_DRIVER: "overlay"
   GIT_DEPTH: "0"
+  APP_DOCKER_IMAGE: "registry.gitlab.com/nazarii-piontko/todo-sample-app"
+  APP_DOCKER_IMAGE_TAG: ${CI_COMMIT_REF_SLUG}
+  K8S_LB_DOMAIN: "34.71.238.42.xip.io"
 
-sonarcloud-check:
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
-  cache:
-    key: "${CI_JOB_NAME}"
-    paths:
-      - .sonar/cache
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  image: docker:dind
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
   script:
-    - sonar-scanner
+    - docker build -t ${APP_DOCKER_IMAGE}:${APP_DOCKER_IMAGE_TAG}.build .
+    - docker push ${APP_DOCKER_IMAGE}:${APP_DOCKER_IMAGE_TAG}.build
+
+test:
+  stage: test
+  image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}/automation
+    auto_stop_in: 1 hour
+  before_script:
+    - /bin/sh gitlab-ci-install-alpine-k8s-tools.sh
+  script:
+    - export ENVIRONMENT=test
+    - export APP_HELM_INGRESS_ENABLED=false
+    - export APP_DOCKER_IMAGE_TAG=${APP_DOCKER_IMAGE_TAG}.build
+
+    - export MSBUILDSINGLELOADCONTEXT=1
+
+    - dotnet test tests/ToDo.Backend.Tests.Integration/ToDo.Backend.Tests.Integration.csproj
+    - dotnet test tests/ToDo.Backend.Tests.E2E/ToDo.Backend.Tests.E2E.csproj
+  after_script:
+    - /bin/sh gitlab-ci-install-alpine-k8s-tools.sh
+    - export ENVIRONMENT=test
+
+    - make -f environments/Makefile delete
+  artifacts:
+    when: on_failure
+    paths:
+      - artifacts/
+    expire_in: 1 day
+
+code-quality:
+  stage: test
+  image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+  before_script:
+    - apk update
+    - apk add openjdk11-jre
+    - export PATH="$PATH:~/.dotnet/tools"
+    - dotnet tool install --global dotnet-sonarscanner
+  script:
+    - export MSBUILDSINGLELOADCONTEXT=1
+    - dotnet restore ToDo.sln
+    - dotnet sonarscanner begin /k:nazarii-piontko_todo-sample-app /o:nazarii-piontko /d:sonar.host.url=${SONAR_HOST_URL} /d:sonar.login=${SONAR_TOKEN} /d:sonar.branch.name=${CI_COMMIT_BRANCH} /d:project.settings=sonar.properties
+    - dotnet build ToDo.sln
+    - dotnet sonarscanner end /d:sonar.login=${SONAR_TOKEN}
   only:
-    - merge_requests
-    - master
-    - develop
+    - branches
+
+deploy:
+  stage: deploy
+  image: docker:dind
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+    url: http://${CI_COMMIT_REF_SLUG}.test.${K8S_LB_DOMAIN}
+    on_stop: stop_deploy
+    auto_stop_in: 1 week
+  services:
+    - docker:dind
+  before_script:
+    - /bin/sh gitlab-ci-install-alpine-k8s-tools.sh
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+  script:
+    - docker pull ${APP_DOCKER_IMAGE}:${APP_DOCKER_IMAGE_TAG}.build
+    - docker tag ${APP_DOCKER_IMAGE}:${APP_DOCKER_IMAGE_TAG}.build ${APP_DOCKER_IMAGE}:${APP_DOCKER_IMAGE_TAG}
+    - docker push ${APP_DOCKER_IMAGE}:${APP_DOCKER_IMAGE_TAG}
+
+    - export ENVIRONMENT=test
+    - export APP_HELM_INGRESS_ENABLED=true
+
+    - make -f environments/Makefile install-db install-app
+
+stop_deploy:
+  stage: deploy
+  image: docker:dind
+  before_script:
+    - /bin/sh gitlab-ci-install-alpine-k8s-tools.sh
+  script:
+    - export ENVIRONMENT=test
+    
+    - make -f environments/Makefile delete
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+    action: stop
+  when: manual

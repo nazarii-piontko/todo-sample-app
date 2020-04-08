@@ -5,20 +5,21 @@
     },
     
     "AutDeploy": {
-        "StartCommand": ["../../../../../environments/test/apply.sh", "--app"],
-        "StopCommand": ["../../../../../environments/test/delete.sh", "--app"]
+        "StartCommand": ["make", "-f", "../../../../../environments/Makefile", "install-db", "forward-db", "install-app", "forward-app"],
+        "StopCommand": ["make", "-f", "../../../../../environments/Makefile", "delete-db", "delete-app"]
     },
     
     "Selenium": {
-        "StartCommand": ["../../../../../environments/test/apply.sh", "--selenium"],
-        "StopCommand": ["../../../../../environments/test/delete.sh", "--selenium"],
+        "StartCommand": ["make", "-f", "../../../../../environments/Makefile", "install-selenium", "forward-selenium"],
+        "StopCommand": ["make", "-f", "../../../../../environments/Makefile", "delete-selenium"],
         "Uri": "http://localhost:4444/wd/hub/",
-        "ImplicitWait": "00:00:01"
+        "ImplicitWait": "00:00:01",
+        "PageLoadWait": "00:01:00"
     },
     
     "Tests": {
-        "ArtifactsDirectory": "./artifacts",
-        "OperationsTimeout": "00:03:00",
+        "ArtifactsDirectory": "../../../../../artifacts",
+        "OperationsTimeout": "00:05:00",
         "RequestsTimeout": "00:00:10"
     }
 }

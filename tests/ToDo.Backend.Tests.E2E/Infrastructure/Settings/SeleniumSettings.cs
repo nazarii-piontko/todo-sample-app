@@ -11,5 +11,7 @@ namespace ToDo.Backend.Tests.E2E.Infrastructure.Settings
         public Uri Uri { get; set; }
         
         public TimeSpan ImplicitWait { get; set; }
+        
+        public TimeSpan PageLoadWait { get; set; }
     }
 }

@@ -3,3 +3,6 @@ hub:
 
 chrome:
   enabled: true
+
+firefox:
+  enabled: false

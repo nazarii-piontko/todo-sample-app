@@ -22,6 +22,8 @@ namespace ToDo.Backend.Tests.E2E.Bindings.Steps
         public async Task ServiceIsRunning()
         {
             await _controller.StartAsync();
+
+            _page.WaitUntilPageIsAvailable("/");
         }
 
         [Given(@"web browser window with size (?<width>\d+)x(?<height>\d+)")]
@@ -30,17 +32,36 @@ namespace ToDo.Backend.Tests.E2E.Bindings.Steps
             _page.WebDriver.Manage().Window.Size = new Size(width, height);
         }
 
-        [Given(@"(?:I )?open page at (?<path>[\/\w-]+)")]
+        [Given(@"opened page at (?<path>[\/\w-]+)")]
         [When(@"(?:I )?open page at (?<path>[\/\w-]+)")]
         public void OpenPageAtPath(string path)
         {
-            _page.Navigate(path);
+            _page.Navigate(path); 
+            _page.WaitUntilLoaded();
         }
 
         [Then(@"make screenshot with name (?<name>[ -_\w\s]+)")]
         public void MakeScreenshot(string name)
         {
             _page.MakeScreenshot(name);
+        }
+
+        [When(@"(?:I )?input '(?<value>[\w@.]+)' into '(?<field>[\w@.]+)'")]
+        public void EnterValueIntoInput(string value, string field)
+        {
+            _page.EnterValueIntoInput(field, value);
+        }
+        
+        [When(@"(?:I )?click button '(?<button>[\w@.]+)'")]
+        public void ClickButton(string button)
+        {
+            _page.ClickButton(button);
+        }
+
+        [Then(@"page should be redirected to (?<path>[\/\w-]+) within (?<timeout>\d+) sec")]
+        public void PageShouldBeRedirected(string path, int timeout)
+        {
+            _page.WaitForPath(path, timeout);
         }
     }
 }

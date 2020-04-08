@@ -32,10 +32,6 @@ namespace ToDo.Backend.Tests.E2E.Infrastructure
 
         public async Task StopAsync()
         {
-            var isRunning = await IsRunningAsync();
-            if (!isRunning)
-                return;
-
             await Utils.RunCommandAsync(_settings.AutDeploy.StopCommand,
                 _settings.Tests.OperationsTimeout);
 

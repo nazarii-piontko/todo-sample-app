@@ -1,9 +1,20 @@
 image:
-  tag: latest
-  pullPolicy: Never
+  repository: ${APP_DOCKER_IMAGE}
+  tag: ${APP_DOCKER_IMAGE_TAG}
+  pullPolicy: IfNotPresent
 
 env:
 - name: ASPNETCORE_ENVIRONMENT
   value: Development
 - name: ConnectionStrings__DefaultConnection
   value: "Host=todo-db-postgresql;Username=root;Password=root;Database=todo"
+
+podAnnotations:
+  app.gitlab.com/app: ${CI_PROJECT_PATH_SLUG}
+  app.gitlab.com/env: ${CI_ENVIRONMENT_SLUG} 
+
+ingress:
+  enabled: ${APP_HELM_INGRESS_ENABLED}
+  hosts:
+    - host: ${CI_COMMIT_REF_SLUG}.${ENVIRONMENT}.${K8S_LB_DOMAIN}
+      paths: [ "/" ]

@@ -1,5 +1,4 @@
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -12,13 +11,10 @@ namespace ToDo.Backend.Tests.E2E.Infrastructure
     public sealed class WebDriverProvider
     {
         private readonly TestsEnvSettings _settings;
-        private readonly HttpClient _httpClient;
 
-        public WebDriverProvider(TestsEnvSettings settings, 
-            HttpClient httpClient)
+        public WebDriverProvider(TestsEnvSettings settings)
         {
             _settings = settings;
-            _httpClient = httpClient;
         }
 
         public async Task<IWebDriver> CreateAsync(SeleniumDriver type = SeleniumDriver.Chrome)
@@ -37,9 +33,9 @@ namespace ToDo.Backend.Tests.E2E.Infrastructure
                     throw new ArgumentOutOfRangeException();
             }
 
-            await EnsureSeleniumRunningAsync();
+            await EnsureSeleniumRunningAsync(driverOptions);
 
-            var webDriver = new RemoteWebDriver(_settings.Selenium.Uri, driverOptions);
+            var webDriver = CreateWebDriver(driverOptions);
 
             SetDriverDefaults(webDriver);
 
@@ -51,25 +47,46 @@ namespace ToDo.Backend.Tests.E2E.Infrastructure
             await Utils.RunCommandAsync(_settings.Selenium.StopCommand,
                 _settings.Tests.OperationsTimeout);
         }
+        
+        private RemoteWebDriver CreateWebDriver(DriverOptions driverOptions)
+        {
+            return new RemoteWebDriver(_settings.Selenium.Uri, driverOptions);
+        }
 
         private void SetDriverDefaults(IWebDriver webDriver)
         {
-            webDriver.Manage().Timeouts().ImplicitWait = _settings.Selenium.ImplicitWait;
+            var timeouts = webDriver.Manage().Timeouts();
+            timeouts.ImplicitWait = _settings.Selenium.ImplicitWait;
+            timeouts.PageLoad = _settings.Selenium.PageLoadWait;
         }
 
-        private async Task EnsureSeleniumRunningAsync()
+        private async Task EnsureSeleniumRunningAsync(DriverOptions driverOptions)
         {
-            Task<bool> IsRunningAsync() => _httpClient.IsUriAccessibleAsync(new Uri(_settings.Selenium.Uri, "status"));
-
-            if (await IsRunningAsync())
+            if (IsRunning(driverOptions))
                 return;
 
             await Utils.RunCommandAsync(_settings.Selenium.StartCommand,
                 _settings.Tests.OperationsTimeout);
 
             await Utils.ExecuteWithRetryAsync(
-                IsRunningAsync,
+                () => Task.FromResult(IsRunning(driverOptions)),
                 timeout: _settings.Tests.OperationsTimeout);
+        }
+
+        private bool IsRunning(DriverOptions driverOptions)
+        {
+            try
+            {
+                // To be 100% sure that everything is running properly we need to create web driver and load a test page
+                using var driver = CreateWebDriver(driverOptions);
+                SetDriverDefaults(driver);
+                driver.Navigate().GoToUrl("https://google.com/");
+                return true;
+            }
+            catch (WebDriverException)
+            {
+                return false;
+            }
         }
     }
 }
