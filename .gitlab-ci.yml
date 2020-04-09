@@ -3,11 +3,12 @@ variables:
   GIT_DEPTH: "0"
   APP_DOCKER_IMAGE: "registry.gitlab.com/nazarii-piontko/todo-sample-app"
   APP_DOCKER_IMAGE_TAG: ${CI_COMMIT_REF_SLUG}
-  K8S_LB_DOMAIN: "34.71.238.42.xip.io"
+  K8S_LB_DOMAIN: "35.226.210.68.xip.io"
 
 stages:
   - build
   - test
+  - quality
   - deploy
 
 build:
@@ -16,19 +17,37 @@ build:
   services:
     - docker:dind
   before_script:
+    - printenv
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
   script:
     - docker build -t ${APP_DOCKER_IMAGE}:${APP_DOCKER_IMAGE_TAG}.build .
     - docker push ${APP_DOCKER_IMAGE}:${APP_DOCKER_IMAGE_TAG}.build
 
-test:
+test-integration:
+  stage: test
+  image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+  script:
+    - export MSBUILDSINGLELOADCONTEXT=1
+
+    - |
+      dotnet test \
+        tests/ToDo.Backend.Tests.Integration/ToDo.Backend.Tests.Integration.csproj \
+        /p:CollectCoverage=true \
+        /p:CoverletOutputFormat=opencover \
+        /p:CoverletOutput=$(pwd)/artifacts/integration.coverlet-opencover.xml
+  artifacts:
+    paths:
+      - artifacts/
+    expire_in: 1 day
+
+test-e2e:
   stage: test
   image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
   environment:
     name: test/${CI_COMMIT_REF_SLUG}/automation
     auto_stop_in: 1 hour
   before_script:
-    - /bin/sh gitlab-ci-install-alpine-k8s-tools.sh
+    - /bin/sh scripts/gitlab-ci-install-alpine-k8s-tools.sh
   script:
     - export ENVIRONMENT=test
     - export APP_HELM_INGRESS_ENABLED=false
@@ -36,22 +55,27 @@ test:
 
     - export MSBUILDSINGLELOADCONTEXT=1
 
-    - dotnet test tests/ToDo.Backend.Tests.Integration/ToDo.Backend.Tests.Integration.csproj
-    - dotnet test tests/ToDo.Backend.Tests.E2E/ToDo.Backend.Tests.E2E.csproj
+    - |
+      dotnet test \
+        tests/ToDo.Backend.Tests.E2E/ToDo.Backend.Tests.E2E.csproj \
+        /p:CollectCoverage=true \
+        /p:CoverletOutputFormat=opencover \
+        /p:CoverletOutput=$(pwd)/artifacts/e2e.coverlet-opencover.xml
+
   after_script:
-    - /bin/sh gitlab-ci-install-alpine-k8s-tools.sh
+    - /bin/sh scripts/gitlab-ci-install-alpine-k8s-tools.sh
     - export ENVIRONMENT=test
 
     - make -f environments/Makefile delete
   artifacts:
-    when: on_failure
     paths:
       - artifacts/
     expire_in: 1 day
 
-code-quality:
-  stage: test
+sonarqube:
+  stage: quality
   image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+  dependencies: [ 'test-integration', 'test-e2e' ]
   before_script:
     - apk update
     - apk add openjdk11-jre
@@ -60,7 +84,15 @@ code-quality:
   script:
     - export MSBUILDSINGLELOADCONTEXT=1
     - dotnet restore ToDo.sln
-    - dotnet sonarscanner begin /k:nazarii-piontko_todo-sample-app /o:nazarii-piontko /d:sonar.host.url=${SONAR_HOST_URL} /d:sonar.login=${SONAR_TOKEN} /d:sonar.branch.name=${CI_COMMIT_BRANCH} /d:project.settings=sonar.properties
+    - |
+      dotnet sonarscanner begin \
+        /k:nazarii-piontko_todo-sample-app \
+        /o:nazarii-piontko \
+        /d:sonar.host.url=${SONAR_HOST_URL} \
+        /d:sonar.login=${SONAR_TOKEN} \
+        /d:sonar.branch.name=${CI_COMMIT_BRANCH} \
+        /d:sonar.cs.opencover.reportsPaths=artifacts/*.coverlet-opencover.xml \
+        /d:project.settings=sonar.properties
     - dotnet build ToDo.sln
     - dotnet sonarscanner end /d:sonar.login=${SONAR_TOKEN}
   only:
@@ -77,7 +109,7 @@ deploy:
   services:
     - docker:dind
   before_script:
-    - /bin/sh gitlab-ci-install-alpine-k8s-tools.sh
+    - /bin/sh scripts/gitlab-ci-install-alpine-k8s-tools.sh
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
   script:
     - docker pull ${APP_DOCKER_IMAGE}:${APP_DOCKER_IMAGE_TAG}.build
@@ -93,7 +125,7 @@ stop_deploy:
   stage: deploy
   image: docker:dind
   before_script:
-    - /bin/sh gitlab-ci-install-alpine-k8s-tools.sh
+    - /bin/sh scripts/gitlab-ci-install-alpine-k8s-tools.sh
   script:
     - export ENVIRONMENT=test
     
