@@ -10,7 +10,7 @@ define install
 	$(eval HELM_VARS_TMP_FILE := $(shell mktemp))
 	envsubst < "$(BASE_DIR)/$(ENVIRONMENT)/$(3)" > "$(HELM_VARS_TMP_FILE)"
 
-	helm install $(1) $(2) --wait -f "$(HELM_VARS_TMP_FILE)" $(if $(KUBE_NAMESPACE),-n $(KUBE_NAMESPACE))
+	helm upgrade $(1) $(2) --install --wait -f "$(HELM_VARS_TMP_FILE)" $(if $(KUBE_NAMESPACE),-n $(KUBE_NAMESPACE))
 
 	-rm -f "$(HELM_VARS_TMP_FILE)"
 endef
