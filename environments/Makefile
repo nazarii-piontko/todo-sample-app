@@ -1,8 +1,9 @@
 ENVIRONMENT ?= local
 
 KUBE_NAMESPACE ?= default
-
 KUBE_DELETE_PVC ?= true
+
+IMAGE_BUILD_TAG ?= latest
 
 BASE_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
@@ -23,6 +24,9 @@ define delete
 	helm delete $(1) || true
 	ps aux | grep '\w port-forward $(2) \d' | awk '{print $$1}' | xargs kill || true
 endef
+
+build-image:
+	cd "$(BASE_DIR)/../" && docker build -t registry.gitlab.com/nazarii-piontko/todo-sample-app:$(IMAGE_BUILD_TAG) .
 
 repo-update:
 	helm repo add stable https://kubernetes-charts.storage.googleapis.com/
@@ -70,4 +74,4 @@ delete-app:
 
 delete: delete-db delete-db-ui delete-selenium delete-app
 
-.PHONY: repo-update install-db forward-db install-db-ui forward-db-ui install-selenium forward-selenium install-app forward-app delete-db delete-db-ui delete-selenium delete-app delete
+.PHONY: build-image repo-update install-db forward-db install-db-ui forward-db-ui install-selenium forward-selenium install-app forward-app delete-db delete-db-ui delete-selenium delete-app delete
